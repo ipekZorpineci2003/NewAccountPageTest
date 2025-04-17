@@ -71,38 +71,80 @@ describe("Form validation tests", () => {
   });
 
   // TEST 6: Should give a warning when out-of-range date is entered
-    test('shows error for invalid day in date (boundary)', () => {
-      fillField('Date of Birth (dd/mm/yyyy)', '02/21/2000');
-      clickSubmit();
-      expect(screen.getByText('Month must be between 1 and 12')).toBeInTheDocument();
-    });
-  
-    // TEST 7: Should give a warning when Fabruary month day limit is exceded
-    test('shows error for invalid day in date (boundary)', () => {
-      fillField('Date of Birth (dd/mm/yyyy)', '30/02/2000');
-      clickSubmit();
-      expect(screen.getByText('February cannot have more than 29 days')).toBeInTheDocument();
-    });
-  
-    // TEST 8: Should give a warning if the password is not long enough
-    test('shows error when password is less than 8 characters (boundary)', () => {
-      fillField('Password', 'pass123'); // 7 character
-      fillField('Confirm Password', 'pass123');
-      clickSubmit();
-      expect(screen.getByText('Password must be at least 8 characters')).toBeInTheDocument();
-    });
-  
-    //TEST 9: Should give a warning if the password has no letter or special character
-    test('shows error when password lacks letter or special character', () => {
-      fillField('Password', '12345678');  // no letter
-      fillField('Confirm Password', '12345678');
-      clickSubmit();
-      expect(screen.getByText('Password must contain at least one letter')).toBeInTheDocument();
-    
-      fillField('Password', 'abcde123'); // letter but no special character
-      fillField('Confirm Password', 'abcde123');
-      clickSubmit();
-      expect(screen.getByText('Password must contain at least one special character')).toBeInTheDocument();
-    });
+  test("shows error for invalid day in date (boundary)", () => {
+    fillField("Date of Birth (dd/mm/yyyy)", "02/21/2000");
+    clickSubmit();
+    expect(
+      screen.getByText("Month must be between 1 and 12")
+    ).toBeInTheDocument();
+  });
 
+  // TEST 7: Should give a warning when Fabruary month day limit is exceded
+  test("shows error for invalid day in date (boundary)", () => {
+    fillField("Date of Birth (dd/mm/yyyy)", "30/02/2000");
+    clickSubmit();
+    expect(
+      screen.getByText("February cannot have more than 29 days")
+    ).toBeInTheDocument();
+  });
+
+  // TEST 8: Should give a warning if the password is not long enough
+  test("shows error when password is less than 8 characters (boundary)", () => {
+    fillField("Password", "pass123"); // 7 character
+    fillField("Confirm Password", "pass123");
+    clickSubmit();
+    expect(
+      screen.getByText("Password must be at least 8 characters")
+    ).toBeInTheDocument();
+  });
+
+  //TEST 9: Should give a warning if the password has no letter or special character
+  test("shows error when password lacks letter or special character", () => {
+    fillField("Password", "12345678"); // no letter
+    fillField("Confirm Password", "12345678");
+    clickSubmit();
+    expect(
+      screen.getByText("Password must contain at least one letter")
+    ).toBeInTheDocument();
+
+    fillField("Password", "abcde123"); // letter but no special character
+    fillField("Confirm Password", "abcde123");
+    clickSubmit();
+    expect(
+      screen.getByText("Password must contain at least one special character")
+    ).toBeInTheDocument();
+  });
+
+  // TEST 10: Should give a warning when the fields are left blank
+  test("shows error when fields contain only spaces", () => {
+    fillField("First Name", "   ");
+    fillField("Last Name", "   ");
+    fillField("E-mail", "   ");
+    fillField("Password", "        ");
+    fillField("Confirm Password", "        ");
+    fillField("Date of Birth (dd/mm/yyyy)", "   ");
+    clickSubmit();
+    expect(screen.getByText("First name is required")).toBeInTheDocument();
+    expect(screen.getByText("Last name is required")).toBeInTheDocument();
+    expect(screen.getByText("Email is required")).toBeInTheDocument();
+    expect(screen.getByText("Password is required")).toBeInTheDocument();
+    expect(
+      screen.getByText("Please confirm your password")
+    ).toBeInTheDocument();
+    expect(screen.getByText("Date of birth is required")).toBeInTheDocument();
+  });
+
+  // TEST 11: The form should be sent successfully when all the fields are entered correctly
+  test("form submits successfully with valid data", () => {
+    fillField("First Name", "Jane");
+    fillField("Last Name", "Smith");
+    fillField("E-mail", "jane.smith@example.com");
+    fillField("Password", "Password@123");
+    fillField("Confirm Password", "Password@123");
+    fillField("Date of Birth (dd/mm/yyyy)", "01/01/1990");
+    clickSubmit();
+    expect(
+      screen.getByText("Account created successfully!")
+    ).toBeInTheDocument();
+  });
 });
