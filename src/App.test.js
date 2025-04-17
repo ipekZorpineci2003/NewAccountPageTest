@@ -69,4 +69,40 @@ describe("Form validation tests", () => {
       screen.getByText("Day must be between 1 and 31")
     ).toBeInTheDocument();
   });
+
+  // TEST 6: Should give a warning when out-of-range date is entered
+    test('shows error for invalid day in date (boundary)', () => {
+      fillField('Date of Birth (dd/mm/yyyy)', '02/21/2000');
+      clickSubmit();
+      expect(screen.getByText('Month must be between 1 and 12')).toBeInTheDocument();
+    });
+  
+    // TEST 7: Should give a warning when Fabruary month day limit is exceded
+    test('shows error for invalid day in date (boundary)', () => {
+      fillField('Date of Birth (dd/mm/yyyy)', '30/02/2000');
+      clickSubmit();
+      expect(screen.getByText('February cannot have more than 29 days')).toBeInTheDocument();
+    });
+  
+    // TEST 8: Should give a warning if the password is not long enough
+    test('shows error when password is less than 8 characters (boundary)', () => {
+      fillField('Password', 'pass123'); // 7 character
+      fillField('Confirm Password', 'pass123');
+      clickSubmit();
+      expect(screen.getByText('Password must be at least 8 characters')).toBeInTheDocument();
+    });
+  
+    //TEST 9: Should give a warning if the password has no letter or special character
+    test('shows error when password lacks letter or special character', () => {
+      fillField('Password', '12345678');  // no letter
+      fillField('Confirm Password', '12345678');
+      clickSubmit();
+      expect(screen.getByText('Password must contain at least one letter')).toBeInTheDocument();
+    
+      fillField('Password', 'abcde123'); // letter but no special character
+      fillField('Confirm Password', 'abcde123');
+      clickSubmit();
+      expect(screen.getByText('Password must contain at least one special character')).toBeInTheDocument();
+    });
+
 });
